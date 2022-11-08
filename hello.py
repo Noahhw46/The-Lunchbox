@@ -13,7 +13,7 @@ def saypartshello():
     return newtext
 
 def say_hello():
-    time.sleep(100)
+    time.sleep(5)
     print("hello world")
         
 
