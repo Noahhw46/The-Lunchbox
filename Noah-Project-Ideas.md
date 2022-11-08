@@ -25,3 +25,28 @@
 # Network protocol audit
 - Pick a given network protocol: a game, a social media app, etc, and audit it.
 - This article is an example of a simple audit of public key infrastucture... http://auditor101.com/definition-question-public-key-infrastructure-pki/
+
+
+
+# Messenger app components:
+    - It would be a chat room situation, where multiple computers can connect to the server and all talk in semi-real time to each other.
+    - There would be two necessary scripts - both we could write in python.
+
+        - Script 1 (Client side)
+            - The client has to listen for two possible input streams; user input and server input
+                - Pythonically that would like like this: 
+                    sockets_list = [sys.stdin, server]
+                    read_sockets,write_socket, error_socket = select.select(sockets_list,[],[])
+            - After recieving a connection from one of those streams the client would either pass it to the server or to standard out depending on where it was coming from.
+
+
+        - Script 2 (Server side)
+            - The server only has to listen for one type of connection, but it also has to determine from which client that connection was coming.
+            - It also has to listen for some set number of connections
+            - It also has to start threads for each client connected 
+                - pythonically that looks like this:
+                    from from _thread import *
+                    start_new_thread(clientthread,(conn,addr)) 
+    
+
+    -One other random idea I had was also to mess with authentication... How can our protocol detect/prevent people from impersonating others?
