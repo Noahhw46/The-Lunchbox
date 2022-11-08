@@ -17,6 +17,7 @@
 
 
 - Component 2:
+        
         - listener
         set up a listener (we could make it from scratch or use netcat) to listen for communications on the given port.
         The advantage to making it from scratch would be to have native/automatic parsing of the specific protocol we want
