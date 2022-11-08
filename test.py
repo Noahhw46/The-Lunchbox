@@ -1,2 +1,8 @@
-#!/usr/bin/env python3
-print('hello world 123 123 123 ')
+from hello import *
+from newdir.someclasses import Spider 
+
+newdog = Dog("Guy", "brown", ["bark", "eat"])
+newdog.eat()
+
+newspider = Spider("Bob")
+newspider.say_hi()
