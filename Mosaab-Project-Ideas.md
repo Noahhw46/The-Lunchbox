@@ -1,0 +1,6 @@
+#BurpSuite Clone using Python library Scapy:
+
+- Scapy is a versatile packet manipulator that can capture, send, decode, and forge packets. It can be used to conduct network-based penetration attacks,
+  such as man in the middle attacks and spoofing. To do this project, we would need to be familiar with the Scapy interface, advanced python concept class,
+  and object oriented programming (at a basic level).
+  - 
