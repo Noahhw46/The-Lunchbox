@@ -12,5 +12,5 @@
 * Will the project be genuinely useful?
 
 
-
+<b>
 - This is not meant to be an exhaustive list, or even a list of necessary things, but some general guiding principals.
