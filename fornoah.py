@@ -7,3 +7,5 @@ def russian_roulette():
             print('You are dead')
     else:
         print('You are alive')
+
+russian_roulette()
