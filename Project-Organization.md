@@ -3,10 +3,10 @@
 
   - Server side
 
-    A1.) Create an incoming socket
-    A2.) Accept client and process request
-    A3.) Redirect the traffic
-    A4.) Send the response back to the client
+   - A1.) Create an incoming socket
+   - A2.) Accept client and process request
+   - A3.) Redirect the traffic
+   - A4.) Send the response back to the client
 
   - Client side
 
