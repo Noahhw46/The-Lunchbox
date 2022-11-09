@@ -10,10 +10,10 @@
 
   - Client side
 
-    A1.1.) Create a socket
-    A2.1.) Connect to the server
-    A5.) Send the request
-    A6.) Receive/display the response
+   - A1.1.) Create a socket
+   - A2.1.) Connect to the server
+   - A5.) Send the request
+   - A6.) Receive/display the response
 
 
 # Step 2
