@@ -47,15 +47,22 @@ def buster():
                 print(f'{http_code}: {url}/{line}')
                 tosave_failures.append(f'{http_code}: {url}/{line}')
                 # print(tosave_failures)
-    if output_entry != "":
-        if output_entry
-        with open(f'{savedirectory}/{savename}_successes.txt', 'a') as f:
-            for item in tosave_successes:
-                f.write(f"{item}\n")
-
-        with open(f'{savedirectory}/{savename}_failures.txt', 'a') as f:
-            for item in tosave_failures:
-                f.write(f"{item}\n")
+    if savename != "":
+        # print(savename[-4:])
+        if savename[-4:] != ".txt":
+            with open(f'{savedirectory}/{savename}_successes.txt', 'a') as f:
+                for item in tosave_successes:
+                    f.write(f"{item}\n")
+            with open(f'{savedirectory}/{savename}_failures.txt', 'a') as f:
+                for item in tosave_failures:
+                    f.write(f"{item}\n")
+        else:
+            with open(f'{savedirectory}/{savename[:-4]}_successes.txt', 'a') as f:
+                for item in tosave_successes:
+                    f.write(f"{item}\n")
+            with open(f'{savedirectory}/{savename[:-4]}_failures.txt', 'a') as f:
+                for item in tosave_failures:
+                    f.write(f"{item}\n")
     print(f"\nBusted!")
 
 
@@ -81,7 +88,7 @@ window.title("Project Name")
 window.config(padx=50, pady=50, bg=BLUE)
 
 canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
-kapow_img = PhotoImage(file="ka_pow.png")
+kapow_img = PhotoImage(file="buster/ka_pow.png")
 canvas.create_image(150, 100, image=kapow_img)
 canvas.grid(column=1, row=0)
 
