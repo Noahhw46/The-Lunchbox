@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import requests
-import argparse
-import sys
-import random
+# import random ###FOR TESTING PURPOSES###
 
 
 
@@ -14,7 +12,7 @@ def read_wordlist(wordlist):
 
 def construct_payload(url, wordlist):
         for word in wordlist:
-            payload = url.replace('fuzz', word)
+            payload = url.replace('FUZZ', word)
             print('\n'f'Fuzzing with {payload}')
             response = requests.get(payload)
             if response.status_code != 200:
@@ -24,8 +22,8 @@ def construct_payload(url, wordlist):
                 print(response.headers)
 
 def main():
-    url = input("What URL do you want to use?")
-    wordlist = input("What wordlist do you want to use?")
+    url = input(f"What URL do you want to use? (Use 'FUZZ' for fuzzing. Ex: http(s)://www.yoururlhere.com/?yourparameter=FUZZ):\n")
+    wordlist = input(f"What wordlist do you want to use? (Full or relative path to word list):\n")
     construct_payload(url, read_wordlist(wordlist))
 
 if __name__ == '__main__':

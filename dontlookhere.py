@@ -24,7 +24,7 @@ def construct_payload(url, wordlist):
                 print(response.headers)
 
 def main():
-    url = input("What URL do you want to use?")
+    url = input("What URL do you want to use? (Format in the style of http(s)://www.yoururlhere.com/?yourparameter=FUZZ")
     wordlist = input("What wordlist do you want to use?")
     construct_payload(url, read_wordlist(wordlist))
 
