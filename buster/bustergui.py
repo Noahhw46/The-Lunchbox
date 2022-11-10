@@ -10,18 +10,9 @@ ORANGE = "#F87D51"
 FONT = "aerial", 10, "bold"
 
 
-# ---------------------------- BUSTER FUNCTION ------------------------------- #
+# ---------------------------- BUSTER FUNCTION ----------------------------- #
 def buster():
-    #protocol = input(f"Do you want HTTP or HTTPS?\n").lower() ###POSSIBLY UNNEEDED. IT'S HERE INCASE
-    # name_file = input("What would you like to name your output file? Leave empty for none:\n")
-    # url = input(f"What URL are we busting today?\n").lower()
-    # if 'www.' not in url:
-    #     url = f"www.{url}"
-    #     if 'http' not in url:
-    #         url = f"https://{url}"
-    # wordlist = input(f"What is the word list you want to use? (Full or Relative path to word list):\n")
     print(f"Starting Busting...\n")
-
     wordlist = wordlist_entry.get()
     savedirectory = savedirectory_entry.get()
     url = website_entry.get()
@@ -39,14 +30,14 @@ def buster():
             # print(type(http_code))
             #try:
             response = response.text
-            if 200 <= http_code < 300:
-                print(f'{http_code}: {url}/{line}')
-                tosave_successes.append(f'{http_code}: {url}/{line}')
-                # print(tosave_successes)
-            else:
+            if 400 <= http_code < 500:
                 print(f'{http_code}: {url}/{line}')
                 tosave_failures.append(f'{http_code}: {url}/{line}')
                 # print(tosave_failures)
+            else:
+                print(f'{http_code}: {url}/{line}')
+                tosave_successes.append(f'{http_code}: {url}/{line}')
+                # print(tosave_successes)
     if savename != "":
         # print(savename[-4:])
         if savename[-4:] != ".txt":
@@ -66,12 +57,13 @@ def buster():
     print(f"\nBusted!")
 
 
-# ---------------------------- FIND DIRECTORY ------------------------------- #
+# ---------------------------- FIND DIRECTORY ------------------------------ #
 def save():
     chosen_directory = filedialog.askdirectory(initialdir='.',title='Select a Folder')
     if chosen_directory:
         savedirectory_entry.delete(0, END)
         savedirectory_entry.insert(0, str(chosen_directory))
+
 
 # ---------------------------- FIND WORDLIST ------------------------------- #
 def browse():
@@ -81,14 +73,21 @@ def browse():
         wordlist_entry.insert(0, str(chosen_wordlist))
 
 
-# ---------------------------- UI SETUP ------------------------------- #
+# ---------------------------- RECURSIVE ----------------------------------- #
+# def repeat():
+#     recursive_dict = []
+#     for item in tosave_successes:
+#         if item
+#         buster()
+
+# ---------------------------- UI SETUP ------------------------------------ #
 
 window = Tk()
 window.title("Project Name")
 window.config(padx=50, pady=50, bg=BLUE)
 
 canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
-kapow_img = PhotoImage(file="buster/ka_pow.png")
+kapow_img = PhotoImage(file="ka_pow.png")
 canvas.create_image(150, 100, image=kapow_img)
 canvas.grid(column=1, row=0)
 
@@ -104,6 +103,7 @@ savedirectory_label.grid(column=0, row=3)
 
 wordlist_label = Label(text="Wordlist to use:", bg=BLUE, fg=ORANGE, font=FONT)
 wordlist_label.grid(column=0, row=4)
+
 
 # Entries
 website_entry = Entry(bg=BLUE, fg=ORANGE, font=FONT)
@@ -122,9 +122,8 @@ savedirectory_entry.insert(0, "")
 wordlist_entry = Entry(bg=BLUE, fg=ORANGE, font=FONT)
 wordlist_entry.grid(column=1, row=4, sticky="EW")
 
+
 # Buttons
-# search_button = Button(text="Search", command=find_password, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
-# search_button.grid(column=2, row=1, sticky="EW")
 save_button = Button(text="Browse Directory", command=save, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
 save_button.grid(column=2, row=3, sticky="EW")
 
@@ -134,4 +133,10 @@ browse_button.grid(column=2, row=4, sticky="EW")
 bust_button = Button(text="Bust it!", command=buster, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
 bust_button.grid(column=1, row=5, columnspan=2, sticky="EW")
 
+# recursive_box = Checkbutton(window, text="Recursive", onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+# recursive_box.grid(column=0, row=5, sticky="EW")
+
+
 window.mainloop()
+
+# TODO:add recursive functionality when you haven't been looking at this for hours. It's stumping me right now.
