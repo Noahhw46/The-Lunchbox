@@ -14,7 +14,7 @@ def extract_parms(url, placeholder):
 
 def makerequest(url):
 
-    with open('useragents.txt', 'r') as f:
+    with open('wordlists/useragents.txt', 'r') as f:
         agents = f.readlines()
         agents = [agent.strip() for agent in agents]
     agent = random.choice(agents)
