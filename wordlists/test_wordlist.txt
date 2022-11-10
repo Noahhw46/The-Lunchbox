@@ -2,7 +2,7 @@ issues
 pulls
 asdasdfdgfhnlksdajhfn
 laksjndklajsdiuh
-robots
+robots.txt
 blah
 blabblab
 plot
