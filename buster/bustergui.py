@@ -11,49 +11,36 @@ FONT = "aerial", 10, "bold"
 
 
 # ---------------------------- BUSTER FUNCTION ----------------------------- #
-def buster():
+def buster(url, wordlist, savedirectory, savename):
     print(f"Starting Busting...\n")
-    wordlist = wordlist_entry.get()
-    savedirectory = savedirectory_entry.get()
-    url = website_entry.get()
-    savename = output_entry.get()
-    tosave_successes = []
-    tosave_failures = []
+    final_successes = []
+    final_failures = []
     with open(wordlist, 'r') as f:
         all_lines = f.readlines()
         
-    for line in all_lines:
+        for line in all_lines:
             line = line.strip()
             response = requests.get(f"{url}/{line}")
             http_code = response.status_code
             # print(http_code)
             # print(type(http_code))
-            #try:
             response = response.text
-            if 400 <= http_code < 500:
+            if 200 <= http_code < 300:
                 print(f'{http_code}: {url}/{line}')
-                tosave_failures.append(f'{http_code}: {url}/{line}')
-                # print(tosave_failures)
-            else:
-                print(f'{http_code}: {url}/{line}')
-                tosave_successes.append(f'{http_code}: {url}/{line}')
+                final_successes.append(f'{http_code}: {url}/{line}')
                 # print(tosave_successes)
+            elif http_code != 404:
+                print(f'{http_code}: {url}/{line}')
+                final_failures.append(f'{http_code}: {url}/{line}')
+                # print(tosave_failures)
     if savename != "":
         # print(savename[-4:])
-        if savename[-4:] != ".txt":
-            with open(f'{savedirectory}/{savename}_successes.txt', 'a') as f:
-                for item in tosave_successes:
-                    f.write(f"{item}\n")
-            with open(f'{savedirectory}/{savename}_failures.txt', 'a') as f:
-                for item in tosave_failures:
-                    f.write(f"{item}\n")
-        else:
-            with open(f'{savedirectory}/{savename[:-4]}_successes.txt', 'a') as f:
-                for item in tosave_successes:
-                    f.write(f"{item}\n")
-            with open(f'{savedirectory}/{savename[:-4]}_failures.txt', 'a') as f:
-                for item in tosave_failures:
-                    f.write(f"{item}\n")
+        with open(f'{savedirectory}/successes_{savename}', 'a') as f:
+            for item in final_successes:
+                f.write(f"{item}\n")
+        with open(f'{savedirectory}/failures_{savename}', 'a') as f:
+            for item in final_failures:
+                f.write(f"{item}\n")
     print(f"\nBusted!")
 
 
@@ -74,20 +61,60 @@ def browse():
 
 
 # ---------------------------- RECURSIVE ----------------------------------- #
-# def repeat():
-#     recursive_dict = []
-#     for item in tosave_successes:
-#         if item
-#         buster()
+def recursive(url, wordlist, successful_urls, failure_urls, savedirectory, savename):
+    with open(wordlist, 'r') as f:
+        all_lines = f.readlines()
+    all_lines = [line.strip() for line in all_lines]
+    for word in all_lines:
+        response = requests.get(f"{url}/{word}")
+        http_code = response.status_code
+
+        if 200 <= http_code < 300:
+            print(f'{http_code}: {url}/{word}')
+            successful_urls.append(f'{url}/{word}')
+            recursive(f'{url}/{word}', wordlist, successful_urls, failure_urls, savedirectory, savename)
+            
+        elif http_code != 404:
+            print(f'{http_code}: {url}/{word}')
+            failure_urls.append(f'{url}/{word}')
+
+    return successful_urls, failure_urls
+
+
+
+# ---------------------------- RECURSIVE ----------------------------------- #
+def main():
+    url = website_entry.get()
+    wordlist = wordlist_entry.get()
+    successful_urls = []
+    failure_urls = []
+    savedirectory = savedirectory_entry.get()
+    savename = output_entry.get()
+    if is_recursive == 0:
+        buster(url, wordlist, savedirectory, savename)
+    else:
+        print("Recursive Busting...")
+        recursed = recursive(url, wordlist, successful_urls, failure_urls, savedirectory, savename)
+        print("Recursive Busted...")
+
+    if savename != "":
+        with open(f'{savedirectory}/successes_{savename}', 'a') as f:
+            for item in recursed[0]:
+                f.write(f"{item}\n")
+        with open(f'{savedirectory}/failures_{savename}', 'a') as f:
+            for item in recursed[1]:
+                f.write(f"{item}\n")
+    print("Done!")
 
 # ---------------------------- UI SETUP ------------------------------------ #
-
 window = Tk()
 window.title("Project Name")
 window.config(padx=50, pady=50, bg=BLUE)
 
+is_recursive = IntVar()
+
 canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
-kapow_img = PhotoImage(file="ka_pow.png")
+kapow_img = PhotoImage(file="buster/ka_pow.png")
 canvas.create_image(150, 100, image=kapow_img)
 canvas.grid(column=1, row=0)
 
@@ -130,11 +157,14 @@ save_button.grid(column=2, row=3, sticky="EW")
 browse_button = Button(text="Browse", command=browse, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
 browse_button.grid(column=2, row=4, sticky="EW")
 
-bust_button = Button(text="Bust it!", command=buster, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+bust_button = Button(text="Bust it!", command=main, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
 bust_button.grid(column=1, row=5, columnspan=2, sticky="EW")
 
-# recursive_box = Checkbutton(window, text="Recursive", onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
-# recursive_box.grid(column=0, row=5, sticky="EW")
+recursive_box = Checkbutton(text="Recursive", variable=is_recursive, onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+recursive_box.grid(column=0, row=5, sticky="EW")
+
+# fail_box = Checkbutton(window, text="Save failures?", onvalue=True, offvalue=False,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+# recursive_box.grid(column=0, row=5, sticky="W")
 
 
 window.mainloop()
