@@ -16,7 +16,7 @@ def bust(url, wordlist, succesful_urls):
             print(f'{http_code}: {url}/{word}')
             succesful_urls.append(f'{url}/{word}')
             bust(f'{url}/{word}', wordlist, succesful_urls)
-
+    print("done")
     return succesful_urls
     
 
@@ -24,7 +24,7 @@ def bust(url, wordlist, succesful_urls):
 def main():
     url = input("Enter a url: ")
     succesful_urls = []
-    successes = bust(url, open("wordlists/test_wordlist.txt", "r").read().splitlines(), succesful_urls)
+    successes = bust(url, open("wordlists/test_recursive.txt", "r").read().splitlines(), succesful_urls)
     with open('busted_urls.txt', "w") as f:
         for url in successes:
             f.write(url)
