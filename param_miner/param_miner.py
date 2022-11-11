@@ -62,13 +62,14 @@ def makerequest(domain):
 def main():
     domain = input("What domain would you like to mine from? ")
     print(f"Extracting parameters from {domain}")
-    out = makerequest(domain)
-    if out:
-        extracted = extract_parms(out)
-        with open('param_miner/output_uris.txt', 'w') as f:
+    fle = input("What file would you like to save the results to? ")
+    res = makerequest(domain)
+    if res:
+        extracted = extract_parms(res)
+        with open('param_miner/' + fle, 'w') as f:
             for uri in extracted:
                 f.write(uri + '\n')
-        print(f"Found {len(extracted)} parameters. Output written to param_miner/output_uris.txt")
+        print(f"Found {len(extracted)} parameters. Output written to param_miner/{fle}")
     else:
         print("No parameters found.")
     
