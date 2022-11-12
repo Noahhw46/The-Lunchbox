@@ -4,6 +4,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename, askdirectory
 import requests
+import concurrent.futures
 
 BLUE = "#1E2B33"
 ORANGE = "#F87D51"
@@ -65,20 +66,28 @@ def read_wordlist(wordlist):
         return lines
 
 def construct_payload(url, wordlist):
+        payloads = []
         for word in wordlist:
             payload = url.replace('FUZZ', word)
-            print('\n'f'Fuzzing with {payload}')
-            response = requests.get(payload)
-            if response.status_code != 200:
-                print(f'Error: {response.status_code} from {payload}')
-            else:
-                print(f'Success: {response.status_code} from {payload}')
-                print(response.headers)
+            payloads.append(payload)
+        return payloads
+
+def send_request(payload):
+    response = requests.get(payload)
+    if response.status_code != 200:
+        print(f'Error: {response.status_code} from {payload}')
+    else:
+        print(f'Success: {response.status_code} from {payload}')
+        print(response.headers)
 
 def main():
     url = input(f"What URL do you want to use? (Use 'FUZZ' for fuzzing. Ex: http(s)://www.yoururlhere.com/?yourparameter=FUZZ):\n")
     wordlist = input(f"What wordlist do you want to use? (Full or relative path to word list):\n")
-    construct_payload(url, read_wordlist(wordlist))
+
+    wordlist = read_wordlist(wordlist)
+    payloads = construct_payload(url, wordlist)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        executor.map(send_request, payloads)
 
 # ---------------------------- FIND DIRECTORY ------------------------------ #
 def save():
