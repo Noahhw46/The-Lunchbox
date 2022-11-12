@@ -1,6 +1,6 @@
 #!/bin/usr/env python3
 
-#I think it would be cool to have a "recursive" checkbox that would run this logic instead of the normal one, but I'm not sure how to do that with the gui so lmk
+
 
 
 

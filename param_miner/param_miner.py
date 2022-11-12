@@ -6,6 +6,7 @@ import time
 import regex as re
 
 
+
 def extract_parms(response):
     #split the response into a list by line
     response = response.splitlines()
