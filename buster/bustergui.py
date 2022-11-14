@@ -102,7 +102,7 @@ def main():
 
 # ---------------------------- UI SETUP ------------------------------------ #
 window = Tk()
-window.title("Project Name")
+window.title("SpiderBuster")
 window.config(padx=50, pady=50, bg=BLUE)
 
 is_recursive = IntVar()
