@@ -41,64 +41,54 @@ def read_wordlist(wordlist):
 
 
 # ---------------------------- PAYLOAD ----------------------------------- #
-def construct_payload(url, wordlist):
+def construct_payload(urls, wordlist):
         payloads = []
-        for word in wordlist:
-            payload = url.replace('FUZZ', word)
-            payloads.append(payload)
+        for url in urls:
+            for word in wordlist:
+                payload = url.replace('FUZZ', word)
+                payloads.append(payload)
         return payloads
 
 
 # ---------------------------- PAYLOAD ----------------------------------- #
 def send_request(payload):
     response = requests.get(payload)
-    if response.status_code != 200 and response.status_code != 404:
-        print(f'Error: {response.status_code} from {payload}')
+    header = response.headers
+    body = response.text
+    if response.status_code != 200:
+        result = f'Error: {response.status_code} from {payload}\n{header}\n{body}'
     else:
-        print(f'Success: {response.status_code} from {payload}')
-        print(response.headers)
-
-
+        result = f'Success: {response.status_code} from {payload}\n{header}\n{body}'
+    return result
 
 
 # ---------------------------- FUNCTION ----------------------------------- #
 def main():
     url = website_entry.get()
     wordlist = wordlist_entry.get()
-    successful_urls = []
-    failure_urls = []
+    parameters = parameter_entry.get()
+    parameters = parameters.replace(" ", "")
+    parameters = parameters.split(",")
+    params_to_fuzz = ["?" + item + "=" + 'FUZZ' for item in parameters]
+    full_url = [url + item for item in params_to_fuzz]
     savedirectory = savedirectory_entry.get()
     savename = output_entry.get()
-    recurse = is_recursive.get()
     failsave = save_fails.get()
-    results = []
-
     start = time.perf_counter()
     wordlist = read_wordlist(wordlist)
-    payloads = construct_payload(url, wordlist)
+    payloads = construct_payload(full_url, wordlist)
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.map(send_request, payloads)
+        results = executor.map(send_request, payloads)
+    for value in results:
+        if "Success" not in value and failsave == 1:
+            with open(f'{savedirectory}/fuzzfailures_{savename}', 'a') as f:
+                f.write(f"{value}\n")
+        if "Success" in value:
+            with open(f'{savedirectory}/fuzzsuccesses_{savename}', 'a') as f:
+                f.write(f"{value}\n\n")
     finish = time.perf_counter()
-    with open(f'{savedirectory}/successes_{savename}', 'a') as f:
-        for item in results[0]:
-            f.write(f"{item}\n")
-    if failsave == 1:
-        with open(f'{savedirectory}/failures_{savename}', 'a') as f:
-            for item in results[1]:
-                f.write(f"{item}\n")
     print(f'Finished in {round(finish-start, 2)} second(s)')
 
-# ---------------------------- RECURSIVE ----------------------------------- #
-def oldmain():
-    url = website_entry.get()
-    wordlist = wordlist_entry.get()
-    successful_urls = []
-    failure_urls = []
-    savedirectory = savedirectory_entry.get()
-    savename = output_entry.get()
-    recurse = is_recursive.get()
-    failsave = save_fails.get()
-    results = []
 
 # ---------------------------- UI SETUP ------------------------------------ #
 
@@ -107,11 +97,10 @@ window = Tk()
 window.title("Parameter Fuzzer")
 window.config(padx=50, pady=50, bg=BLUE)
 
-is_recursive = IntVar()
 save_fails = IntVar()
 
 canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
-kapow_img = PhotoImage(file=f"{ASSETPATH}/ka-pow.png")
+kapow_img = PhotoImage(file=f"{ASSETPATH}/boom.png")
 canvas.create_image(150, 100, image=kapow_img)
 canvas.grid(column=1, row=0)
 
@@ -164,11 +153,8 @@ browse_button.grid(column=2, row=5, sticky="EW")
 bust_button = Button(text="Fuzz it!", command=main, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
 bust_button.grid(column=1, row=6, columnspan=2, sticky="EW")
 
-recursive_box = Checkbutton(window, text="Recursive", variable=is_recursive, onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
-recursive_box.grid(column=1, row=7, sticky="EW")
-
 fail_box = Checkbutton(window, text="Save failures?", variable=save_fails, onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
-fail_box.grid(column=2, row=7, sticky="EW")
+fail_box.grid(column=0, row=6, sticky="EW")
 
 
 window.mainloop()
