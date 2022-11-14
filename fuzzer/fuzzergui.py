@@ -1,93 +1,20 @@
 #!/usr/bin/env python3
 
+import concurrent.futures
+from pathlib import Path
+import requests
+import time
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename, askdirectory
-import requests
-import concurrent.futures
 
+
+ROOTPATH = Path(__file__).parent.parent
+ASSETPATH = f"{ROOTPATH}/assets"
 BLUE = "#1E2B33"
 ORANGE = "#F87D51"
 FONT = "aerial", 10, "bold"
 
-
-# ---------------------------- BUSTER FUNCTION ----------------------------- #
-def buster():
-    print(f"Starting Busting...\n")
-    wordlist = wordlist_entry.get()
-    savedirectory = savedirectory_entry.get()
-    url = website_entry.get()
-    savename = output_entry.get()
-    tosave_successes = []
-    tosave_failures = []
-    with open(wordlist, 'r') as f:
-        all_lines = f.readlines()
-        
-    for line in all_lines:
-            line = line.strip()
-            response = requests.get(f"{url}/{line}")
-            http_code = response.status_code
-            # print(http_code)
-            # print(type(http_code))
-            #try:
-            response = response.text
-            if 400 <= http_code < 500:
-                print(f'{http_code}: {url}/{line}')
-                tosave_failures.append(f'{http_code}: {url}/{line}')
-                # print(tosave_failures)
-            else:
-                print(f'{http_code}: {url}/{line}')
-                tosave_successes.append(f'{http_code}: {url}/{line}')
-                # print(tosave_successes)
-    if savename != "":
-        # print(savename[-4:])
-        if savename[-4:] != ".txt":
-            with open(f'{savedirectory}/{savename}_successes.txt', 'a') as f:
-                for item in tosave_successes:
-                    f.write(f"{item}\n")
-            with open(f'{savedirectory}/{savename}_failures.txt', 'a') as f:
-                for item in tosave_failures:
-                    f.write(f"{item}\n")
-        else:
-            with open(f'{savedirectory}/{savename[:-4]}_successes.txt', 'a') as f:
-                for item in tosave_successes:
-                    f.write(f"{item}\n")
-            with open(f'{savedirectory}/{savename[:-4]}_failures.txt', 'a') as f:
-                for item in tosave_failures:
-                    f.write(f"{item}\n")
-    print(f"\nBusted!")
-
-
-# ---------------------------- UI SETUP ------------------------------- #
-def read_wordlist(wordlist):
-    with open(wordlist, 'r') as f:
-        lines = f.readlines()
-        lines = [line.strip() for line in lines]
-        return lines
-
-def construct_payload(url, wordlist):
-        payloads = []
-        for word in wordlist:
-            payload = url.replace('FUZZ', word)
-            payloads.append(payload)
-        return payloads
-
-def send_request(payload):
-    response = requests.get(payload)
-    if response.status_code != 200:
-        print(f'Error: {response.status_code} from {payload}')
-    else:
-        print(f'Success: {response.status_code} from {payload}')
-        print(response.headers)
-
-def main():
-    url = input(f"What URL do you want to use? (Use 'FUZZ' for fuzzing. Ex: http(s)://www.yoururlhere.com/?yourparameter=FUZZ):\n")
-    wordlist = input(f"What wordlist do you want to use? (Full or relative path to word list):\n")
-
-    wordlist = read_wordlist(wordlist)
-    payloads = construct_payload(url, wordlist)
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        executor.map(send_request, payloads)
 
 # ---------------------------- FIND DIRECTORY ------------------------------ #
 def save():
@@ -105,21 +32,86 @@ def browse():
         wordlist_entry.insert(0, str(chosen_wordlist))
 
 
+# ---------------------------- READ WORDLIST ------------------------------- #
+def read_wordlist(wordlist):
+    with open(wordlist, 'r') as f:
+        lines = f.readlines()
+        lines = [line.strip() for line in lines]
+        return lines
+
+
+# ---------------------------- PAYLOAD ----------------------------------- #
+def construct_payload(url, wordlist):
+        payloads = []
+        for word in wordlist:
+            payload = url.replace('FUZZ', word)
+            payloads.append(payload)
+        return payloads
+
+
+# ---------------------------- PAYLOAD ----------------------------------- #
+def send_request(payload):
+    response = requests.get(payload)
+    if response.status_code != 200:
+        print(f'Error: {response.status_code} from {payload}')
+    else:
+        print(f'Success: {response.status_code} from {payload}')
+        print(response.headers)
+
+
+
+
+# ---------------------------- FUNCTION ----------------------------------- #
+def main():
+    url = website_entry.get()
+    wordlist = wordlist_entry.get()
+    successful_urls = []
+    failure_urls = []
+    savedirectory = savedirectory_entry.get()
+    savename = output_entry.get()
+    recurse = is_recursive.get()
+    failsave = save_fails.get()
+    results = []
+
+    start = time.perf_counter()
+    wordlist = read_wordlist(wordlist)
+    payloads = construct_payload(url, wordlist)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        executor.map(send_request, payloads)
+    finish = time.perf_counter()
+    with open(f'{savedirectory}/successes_{savename}', 'a') as f:
+        for item in results[0]:
+            f.write(f"{item}\n")
+    if failsave == 1:
+        with open(f'{savedirectory}/failures_{savename}', 'a') as f:
+            for item in results[1]:
+                f.write(f"{item}\n")
+    print(f'Finished in {round(finish-start, 2)} second(s)')
+
 # ---------------------------- RECURSIVE ----------------------------------- #
-# def repeat():
-#     recursive_dict = []
-#     for item in tosave_successes:
-#         if item
-#         buster()
+def oldmain():
+    url = website_entry.get()
+    wordlist = wordlist_entry.get()
+    successful_urls = []
+    failure_urls = []
+    savedirectory = savedirectory_entry.get()
+    savename = output_entry.get()
+    recurse = is_recursive.get()
+    failsave = save_fails.get()
+    results = []
 
 # ---------------------------- UI SETUP ------------------------------------ #
+
 
 window = Tk()
 window.title("Project Name")
 window.config(padx=50, pady=50, bg=BLUE)
 
+is_recursive = IntVar()
+save_fails = IntVar()
+
 canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
-kapow_img = PhotoImage(file="ka_pow.png")
+kapow_img = PhotoImage(file=f"{ASSETPATH}/Boom.png")
 canvas.create_image(150, 100, image=kapow_img)
 canvas.grid(column=1, row=0)
 
@@ -162,13 +154,14 @@ save_button.grid(column=2, row=3, sticky="EW")
 browse_button = Button(text="Browse", command=browse, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
 browse_button.grid(column=2, row=4, sticky="EW")
 
-bust_button = Button(text="Bust it!", command=buster, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+bust_button = Button(text="Fuzz it!", command=main, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
 bust_button.grid(column=1, row=5, columnspan=2, sticky="EW")
 
-# recursive_box = Checkbutton(window, text="Recursive", onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
-# recursive_box.grid(column=0, row=5, sticky="EW")
+recursive_box = Checkbutton(window, text="Recursive", variable=is_recursive, onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+recursive_box.grid(column=1, row=6, sticky="EW")
+
+fail_box = Checkbutton(window, text="Save failures?", variable=save_fails, onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+fail_box.grid(column=2, row=6, sticky="EW")
 
 
 window.mainloop()
-
-# TODO:add recursive functionality when you haven't been looking at this for hours. It's stumping me right now.
