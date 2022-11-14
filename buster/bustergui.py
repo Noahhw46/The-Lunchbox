@@ -1,25 +1,19 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
+import requests
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename, askdirectory
-import requests
-from pathlib import Path
 
 ROOTPATH = Path(__file__).parent.parent
 ASSETPATH = f"{ROOTPATH}/assets"
-
-
-
-
 BLUE = "#1E2B33"
 ORANGE = "#F87D51"
 FONT = "aerial", 10, "bold"
 
-
 # ---------------------------- BUSTER FUNCTION ----------------------------- #
 def buster(url, wordlist):
-    print(f"Starting Busting...\n")
     busted_successes = []
     busted_failures = []
     with open(wordlist, 'r') as f:
@@ -37,8 +31,7 @@ def buster(url, wordlist):
                 print(f'{http_code}: {url}/{line}')
                 busted_failures.append(f'{http_code}: {url}/{line}')
     return busted_successes, busted_failures
-    print(f"\nBusted!")
-
+ 
 
 # ---------------------------- FIND DIRECTORY ------------------------------ #
 def save():
@@ -77,7 +70,6 @@ def recursive(url, wordlist, successful_urls, failure_urls):
     return successful_urls, failure_urls
 
 
-
 # ---------------------------- RECURSIVE ----------------------------------- #
 def main():
     url = website_entry.get()
@@ -89,12 +81,9 @@ def main():
     recurse = is_recursive.get()
     failsave = save_fails.get()
     results = []
-    # print(failsave)
-    # print(type(failsave))
     if recurse == 0:
         print("Busting...")
         results = buster(url, wordlist)
-        print(results)
         print("Busted...")
     else:
         print("Recursive Busting...")
@@ -110,9 +99,8 @@ def main():
                 f.write(f"{item}\n")
     print("Done!")
 
+
 # ---------------------------- UI SETUP ------------------------------------ #
-
-
 window = Tk()
 window.title("Project Name")
 window.config(padx=50, pady=50, bg=BLUE)
@@ -124,6 +112,7 @@ canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
 kapow_img = PhotoImage(file=f"{ASSETPATH}/ka_pow.png")
 canvas.create_image(150, 100, image=kapow_img)
 canvas.grid(column=1, row=0)
+
 
 # Labels
 website_label = Label(text="Website to bust:", bg=BLUE, fg=ORANGE, font=FONT)

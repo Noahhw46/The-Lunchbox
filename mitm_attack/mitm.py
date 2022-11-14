@@ -57,7 +57,7 @@ def main():
 
     print('Welcome to the ARP monitor and spoofer') #lets make a better name for this lol
     user_in = input('What would you like to do? (1) Monitor ARP packets (2) Spoof ARP packets (3) View working pcap (4) Exit\n')
-    if user_in != '1' and user_in != '2' and user_in != '3':
+    if user_in != '1' and user_in != '2' and user_in != '3' and user_in != '4':
         print('Invalid input. Please try again.')
         main()
     elif user_in == '1':
