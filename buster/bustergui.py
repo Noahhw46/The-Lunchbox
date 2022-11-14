@@ -4,6 +4,13 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename, askdirectory
 import requests
+from pathlib import Path
+
+ROOTPATH = Path(__file__).parent.parent
+ASSETPATH = f"{ROOTPATH}/assets"
+
+
+
 
 BLUE = "#1E2B33"
 ORANGE = "#F87D51"
@@ -104,6 +111,8 @@ def main():
     print("Done!")
 
 # ---------------------------- UI SETUP ------------------------------------ #
+
+
 window = Tk()
 window.title("Project Name")
 window.config(padx=50, pady=50, bg=BLUE)
@@ -112,7 +121,7 @@ is_recursive = IntVar()
 save_fails = IntVar()
 
 canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
-kapow_img = PhotoImage(file="./ka_pow.png")
+kapow_img = PhotoImage(file=f"{ASSETPATH}/ka_pow.png")
 canvas.create_image(150, 100, image=kapow_img)
 canvas.grid(column=1, row=0)
 
