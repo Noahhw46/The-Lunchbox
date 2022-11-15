@@ -7,6 +7,7 @@ import time
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename, askdirectory
+import entry as e
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
     FONT = "aerial", 10, "bold"
 
 
-    # ---------------------------- FIND DIRECTORY ------------------------------ #
+# ---------------------------- FIND DIRECTORY ------------------------------ #
     def save():
         chosen_directory = filedialog.askdirectory(initialdir='.',title='Select a Folder')
         if chosen_directory:
@@ -25,7 +26,7 @@ def main():
             savedirectory_entry.insert(0, str(chosen_directory))
 
 
-    # ---------------------------- FIND WORDLIST ------------------------------- #
+# ---------------------------- FIND WORDLIST ------------------------------- #
     def browse():
         chosen_wordlist = filedialog.askopenfilename(initialdir='.',title='Select a File' ,filetypes=[('Text files', '*.txt'), ('All files', '*.*')])
         if chosen_wordlist:
@@ -33,7 +34,7 @@ def main():
             wordlist_entry.insert(0, str(chosen_wordlist))
 
 
-    # ---------------------------- READ WORDLIST ------------------------------- #
+# ---------------------------- READ WORDLIST ------------------------------- #
     def read_wordlist(wordlist):
         with open(wordlist, 'r') as f:
             lines = f.readlines()
@@ -41,7 +42,7 @@ def main():
             return lines
 
 
-    # ---------------------------- PAYLOAD ----------------------------------- #
+# ---------------------------- PAYLOAD ----------------------------------- #
     def construct_payload(urls, wordlist):
             payloads = []
             for url in urls:
@@ -51,7 +52,7 @@ def main():
             return payloads
 
 
-    # ---------------------------- PAYLOAD ----------------------------------- #
+# ---------------------------- PAYLOAD ----------------------------------- #
     def send_request(payload):
         response = requests.get(payload)
         header = response.headers
@@ -63,8 +64,8 @@ def main():
         return result
 
 
-    # ---------------------------- FUNCTION ----------------------------------- #
-    def main():
+# ---------------------------- FUNCTION ----------------------------------- #
+    def start():
         url = website_entry.get()
         wordlist = wordlist_entry.get()
         parameters = parameter_entry.get()
@@ -89,11 +90,13 @@ def main():
                     f.write(f"{value}\n\n")
         finish = time.perf_counter()
         print(f'Finished in {round(finish-start, 2)} second(s)')
+        window.destroy()
+        e.main()
 
 
-    # ---------------------------- UI SETUP ------------------------------------ #
+# ---------------------------- UI SETUP ------------------------------------ #
 
-
+# Window
     window = Tk()
     window.title("Parameter Fuzzer")
     window.config(padx=50, pady=50, bg=BLUE)
@@ -105,7 +108,7 @@ def main():
     canvas.create_image(150, 100, image=kapow_img)
     canvas.grid(column=1, row=0)
 
-    # Labels
+# Labels
     website_label = Label(text="Website to fuzz:", bg=BLUE, fg=ORANGE, font=FONT)
     website_label.grid(column=0, row=1)
 
@@ -122,7 +125,7 @@ def main():
     wordlist_label.grid(column=0, row=5)
 
 
-    # Entries
+# Entries
     website_entry = Entry(bg=BLUE, fg=ORANGE, font=FONT)
     website_entry.grid(column=1, row=1, columnspan=2, sticky="EW")
     website_entry.insert(0, "https://")
@@ -144,14 +147,14 @@ def main():
     wordlist_entry.grid(column=1, row=5, sticky="EW")
 
 
-    # Buttons
+# Buttons
     save_button = Button(text="Browse Directory", command=save, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
     save_button.grid(column=2, row=4, sticky="EW")
 
     browse_button = Button(text="Browse", command=browse, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
     browse_button.grid(column=2, row=5, sticky="EW")
 
-    bust_button = Button(text="Fuzz it!", command=main, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+    bust_button = Button(text="Fuzz it!", command=start, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
     bust_button.grid(column=1, row=6, columnspan=2, sticky="EW")
 
     fail_box = Checkbutton(window, text="Save failures?", variable=save_fails, onvalue=1, offvalue=0,  bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)

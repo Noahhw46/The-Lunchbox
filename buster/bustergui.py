@@ -5,6 +5,7 @@ import requests
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename, askdirectory
+import entry as e 
 
 def main():
     ROOTPATH = Path(__file__).parent.parent
@@ -98,7 +99,8 @@ def main():
             with open(f'{savedirectory}/failures_{savename}', 'a') as f:
                 for item in results[1]:
                     f.write(f"{item}\n")
-        print("Done!")
+        window.destroy()
+        e.main()
 
 
 
