@@ -30,7 +30,6 @@ def main():
         def do_sniff():
             num_packets = int(num_packets_entry.get())
             sniff(prn=arp_monitor_callback, filter="arp", store=0, count=num_packets)
-            print('Sniffing complete. ARP packets saved to mitm_attack/arp_monitor.pcap')
             sniff_window.destroy()
 
         sniff_window = Toplevel(window)
@@ -188,10 +187,10 @@ def main():
     window.config(padx=50, pady=50, bg=BLUE)
 
 
-    # canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
-    # kapow_img = PhotoImage(file=f"{ASSETPATH}/ka_pow.png")
-    # canvas.create_image(150, 100, image=kapow_img)
-    # canvas.grid(column=1, row=0)
+    canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
+    kapow_img = PhotoImage(file=f"{ASSETPATH}/wtf.png")
+    canvas.create_image(150, 150, image=kapow_img)
+    canvas.grid(column=0, row=0, columnspan=2)
 
 
     # ------------------------------------ LABELS ------------------------------------#

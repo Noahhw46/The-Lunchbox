@@ -116,7 +116,7 @@ def main():
     canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
     kapow_img = PhotoImage(file=f"{ASSETPATH}/ka_pow.png")
     canvas.create_image(150, 100, image=kapow_img)
-    canvas.grid(column=1, row=0)
+    canvas.grid(column=1, row=0, columnspan=2)
 
 
 # Labels

@@ -38,7 +38,7 @@ def main():
     canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
     kapow_img = PhotoImage(file=f"{ASSETPATH}/wow.png")
     canvas.create_image(150, 100, image=kapow_img)
-    canvas.grid(column=1, row=0)
+    canvas.grid(column=0, row=0, columnspan=2)
 
 
     # Labels
@@ -65,7 +65,7 @@ def main():
     fuzzer_button = Button(text="Fuzzer", command=fuzzed, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
     fuzzer_button.grid(column=1, row=3, columnspan=2, sticky="EW")
 
-    mitm_button = Button(text="Bust it!", command=mitmed, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+    mitm_button = Button(text="MitM", command=mitmed, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
     mitm_button.grid(column=1, row=4, columnspan=2, sticky="EW")
 
     exit_button = Button(text="Bye!", command=window.destroy, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)

@@ -7,6 +7,7 @@ import time
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename, askdirectory
+import entry as e 
 
 
 def main():
@@ -85,10 +86,12 @@ def main():
                 with open(f'{savedirectory}/fuzzfailures_{savename}', 'a') as f:
                     f.write(f"{value}\n")
             if "Success" in value:
-                with open(f'{savedirectory}/fuzzsuccesses_{savename}', 'a') as f:
-                    f.write(f"{value}\n\n")
+                with open(f'{savedirectory}/fuzzsuccesses_{savename}', 'a', encoding="utf-8") as f:
+                    f.write(f"{value}\n")
         finish = time.perf_counter()
         print(f'Finished in {round(finish-start, 2)} second(s)')
+        window.destroy()
+        e.main()
 
 
 # ---------------------------- UI SETUP ------------------------------------ #
@@ -103,7 +106,7 @@ def main():
     canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
     kapow_img = PhotoImage(file=f"{ASSETPATH}/boom.png")
     canvas.create_image(150, 100, image=kapow_img)
-    canvas.grid(column=1, row=0)
+    canvas.grid(column=1, row=0, columnspan=2)
 
 # Labels
     website_label = Label(text="Website to fuzz:", bg=BLUE, fg=ORANGE, font=FONT)
