@@ -52,13 +52,12 @@ def toggle_IP_forward():
                 else:
                     with open(path, "wb") as file:
                         file.write(b'1')
-        main()
+
     elif platform == 'darwin':
         print('MacOS not supported yet.')
-        main()
+
     elif platform == 'win32':
         print('Enable IP forwarding with "run" regedit: HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\EnableRouter')
-        main()
 
 def view_working_pcap():
     packets = read_bytes_from_pcap()
@@ -104,14 +103,17 @@ def main():
             spoof(target, gateway)
     elif user_in == '3':
         view_working_pcap()
+        main()
     elif user_in == '4':
         toggle_IP_forward()
+        main()
     elif user_in == '5':
         target = input('What is the target IP? ')
         gateway = input('What is the gateway IP? ')
         print('Fixing ARP packets...')
         for _ in range (16):
             send_fix(target, gateway)
+        main()
     elif user_in == '6':
         exit()
 
