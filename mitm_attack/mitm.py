@@ -49,10 +49,13 @@ def toggle_IP_forward():
                 if file.read() == b'1':
                     with open(path, "wb") as file:
                         file.write(b'0')
+                        num = 0
                 else:
                     with open(path, "wb") as file:
                         file.write(b'1')
-
+                        num = 1
+        print('IP forwarding enabled') if num == 1 else print('IP forwarding disabled')
+        
     elif platform == 'darwin':
         print('MacOS not supported yet.')
 

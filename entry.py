@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
-from buster import bustergui as bg
-from fuzzer import fuzzergui as fg
+from buster import buster_gui as bg
+from fuzzer import fuzzer_gui as fg
 from param_miner import pminer_gui as pg
-# from mitm_attack import mitm as mm
+from mitm_attack import mitm_gui as mg
 from pathlib import Path
 from tkinter import *
 
@@ -19,6 +19,10 @@ def main():
     def mined():
         window.destroy()
         pg.main()
+
+    def mitmed():
+        window.destroy()
+        mg.main()
 
     ROOTPATH = Path(__file__).parent
     ASSETPATH = f"{ROOTPATH}/assets"
@@ -61,8 +65,8 @@ def main():
     fuzzer_button = Button(text="Fuzzer", command=fuzzed, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
     fuzzer_button.grid(column=1, row=3, columnspan=2, sticky="EW")
 
-    # mitm_button = Button(text="Bust it!", command=mm, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
-    # mitm_button.grid(column=1, row=4, columnspan=2, sticky="EW")
+    mitm_button = Button(text="Bust it!", command=mitmed, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
+    mitm_button.grid(column=1, row=4, columnspan=2, sticky="EW")
 
     exit_button = Button(text="Bye!", command=window.destroy, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
     exit_button.grid(column=1, row=5, columnspan=2, sticky="EW")
