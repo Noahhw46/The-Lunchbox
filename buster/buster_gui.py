@@ -5,7 +5,7 @@ import requests
 from tkinter import *
 from tkinter import filedialog
 from tkinter.filedialog import askopenfilename, askdirectory
-import entry as e 
+import lunchbox as e 
 
 def main():
     ROOTPATH = Path(__file__).parent.parent

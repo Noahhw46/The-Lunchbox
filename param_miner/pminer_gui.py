@@ -8,7 +8,7 @@ import requests
 import random
 import time
 import regex as re
-import entry as e
+import lunchbox as e
 
 def main():
     ROOTPATH = Path(__file__).parent.parent
