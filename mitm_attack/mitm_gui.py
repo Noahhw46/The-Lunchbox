@@ -183,14 +183,14 @@ def main():
     # ------------------------------------ UI ------------------------------------#
     window = Tk()
     window.title("MITM Attack")
+    window.geometry("500x700")
     window.config(padx=50, pady=50, bg=BLUE)
 
 
-    canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
+    canvas = Canvas(width=200, height=200, bg=BLUE, highlightthickness=0)
     kapow_img = PhotoImage(file=f"{ASSETPATH}/mitm.png")
-    canvas.create_image(150, 150, image=kapow_img)
-    canvas.grid(column=0, row=0, columnspan=2)
-
+    canvas.create_image(100, 100, image=kapow_img)
+    canvas.grid(column=0, row=0, columnspan=3)
 
     # ------------------------------------ LABELS ------------------------------------#
     monitor_arp_label = Label(text="Monitor ARP", bg=BLUE, fg=ORANGE, font=FONT)
@@ -228,7 +228,7 @@ def main():
     fix_arp_button.grid(column=1, row=6, columnspan=2, sticky="EW")
 
     exit_button = Button(text="Bye!", command=window.destroy, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
-    exit_button.grid(column=1, row=7, columnspan=2, sticky="EW")
+    exit_button.grid(column=0, row=7, columnspan=3, sticky="EW")
 
 
 

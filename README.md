@@ -1,13 +1,19 @@
-# BurpSuite Clone using Python library Scapy:
+# Beginner Web Hacking Pipeline
 
-Scapy is a versatile packet manipulator that can capture, send, decode, and forge packets. It can be used to conduct network-based penetration attacks,
-such as man in the middle attacks and spoofing. To do this project, we would need to be familiar with the Scapy interface, advanced python concept class,
-and object oriented programming (at a basic level).
+The motivation for this project is just how overwhelming it can be to be a beginner in the hacking/Info Sec space. There are so many tools and attacks, and they're all different and genuinely require their own set of expertise. The Lunchbox is meant for curious beginnners. We wanted to create an unintimidating, but robust codebase that could easily be tinkered with by people just learning python for hacking for the first time. We created the project with ease of use, simplicity, and robustneess in mind. With 5 distinct minimalistic GUI's, it's meant to facilitate the process of learning about the core of these attack-types.
 
-	- For the project, we would be using Scapy to make a clone code of BurpSuite Pro as a way to get around the oppressive price tag.
-	- Features from Burp Suite Pro we would clone into this script:
-		-- Building out a proxy
-		-- Packet Interceptor and editor 
-		-- Decode HTTPS packets
-		-- XSRF attacks
-	More Burp Suite Pro features can be found here: https://portswigger.net/burp/pro/features
+# Features
+	--Full MITM attack capabilities, including ARP-packet monitoring, spoofing, pcap parsing, and a function to fix the rearranged routing tables.
+	--Directory busting, both recurisve and not.
+	--HTTP parameter fuzzing, for SQL injections, XSS, or whatever one's fuzzing needs are (just put FUZZ in the URL, supply a wordlist, and watch our fuzzer go to town)
+	--HTTP paramter mining, with inspiration from [The Param Spider](https://github.com/devanshbatham/ParamSpider) we use web-archives to extract parameters from domains of your choosing, and format them nicely in a file where you can browse all the valid parameters.
+	
+# Installation 
+```
+Git Clone https://github.com/Noahhw46/The-Lunchbox/ 
+cd The-Lunchbox 
+pip install -r requirements.txt 
+python lunchbox.py 
+```
+
+
