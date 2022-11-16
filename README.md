@@ -13,7 +13,7 @@ The motivation for this project is just how overwhelming it can be to be a begin
 git clone https://github.com/Noahhw46/The-Lunchbox/ 
 cd The-Lunchbox 
 pip install -r requirements.txt 
-python lunchbox.py 
+python3 lunchbox.py 
 ```
 
 
