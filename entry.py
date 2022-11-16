@@ -37,7 +37,7 @@ def main():
 
     canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
     kapow_img = PhotoImage(file=f"{ASSETPATH}/wow.png")
-    canvas.create_image(150, 100, image=kapow_img)
+    canvas.create_image(159, 100, image=kapow_img)
     canvas.grid(column=0, row=0, columnspan=2)
 
 
@@ -69,7 +69,7 @@ def main():
     mitm_button.grid(column=1, row=4, columnspan=2, sticky="EW")
 
     exit_button = Button(text="Bye!", command=window.destroy, bg=BLUE, fg=ORANGE, font=FONT, highlightthickness=0)
-    exit_button.grid(column=1, row=5, columnspan=2, sticky="EW")
+    exit_button.grid(column=0, row=5, columnspan=3, sticky="EW")
 
 
 
