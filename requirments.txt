@@ -1,2 +1,6 @@
 scapy
 winpcap
+tkinter
+regex
+tkinter
+

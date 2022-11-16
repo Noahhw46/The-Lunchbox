@@ -8,7 +8,6 @@ import scapy.all as scapy
 from sys import platform
 import time
 from tkinter import *
-import keyboard
 
 def main():
     ROOTPATH = Path(__file__).parent.parent
