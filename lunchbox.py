@@ -31,7 +31,7 @@ def main():
     FONT = "aerial", 10, "bold"
 
     window = Tk()
-    window.title("My First Red Team Tools")
+    window.title("The Lunchbox")
     window.config(padx=50, pady=50, bg=BLUE)
 
 

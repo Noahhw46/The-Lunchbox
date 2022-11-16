@@ -1,6 +1,4 @@
 scapy
-winpcap
-tkinter
 regex
-tkinter
-
+tk
+requests
