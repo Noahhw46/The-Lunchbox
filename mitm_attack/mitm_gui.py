@@ -61,7 +61,7 @@ def main():
         forward_window.config(padx=50, pady=50, bg=BLUE)
 
         forward_label = Label(forward_window,text='', bg=BLUE, fg=ORANGE, font=FONT)
-        forward_label.grid(column=0, row=0)
+        forward_label.pack()
 
         if platform == 'linux' or platform == 'linux2':            
             path = '/proc/sys/net/ipv4/ip_forward'
@@ -79,7 +79,7 @@ def main():
         elif platform == 'darwin':
             forward_label.config(text='MacOS not supported yet.')
         elif platform == 'win32':
-            forward_label.config(text='Enable IP forwarding with "run" regedit: HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\Services\Tcpip\Parameters\EnableRouter')
+            forward_label.config(text='Enable IP forwarding with "run" regedit: \nHKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\Services\Tcpip\Parameters\EnableRouter')
 
     def view_working_pcap():
         pcap_window = Toplevel(window)
