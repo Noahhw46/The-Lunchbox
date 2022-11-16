@@ -10,7 +10,7 @@ The motivation for this project is just how overwhelming it can be to be a begin
 	
 # Installation 
 ```
-Git Clone https://github.com/Noahhw46/The-Lunchbox/ 
+git clone https://github.com/Noahhw46/The-Lunchbox/ 
 cd The-Lunchbox 
 pip install -r requirements.txt 
 python lunchbox.py 
