@@ -188,7 +188,7 @@ def main():
 
 
     canvas = Canvas(width=318, height=200, bg=BLUE, highlightthickness=0)
-    kapow_img = PhotoImage(file=f"{ASSETPATH}/wtf.png")
+    kapow_img = PhotoImage(file=f"{ASSETPATH}/mitm.png")
     canvas.create_image(150, 150, image=kapow_img)
     canvas.grid(column=0, row=0, columnspan=2)
 
