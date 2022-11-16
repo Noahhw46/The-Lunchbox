@@ -1,4 +1,4 @@
-#Beginner Web Hacking Pipeline
+# Beginner Web Hacking Pipeline
 
 The motivation for this project is just how overwhelming it can be to be a beginner in the hacking/Info Sec space. There are so many tools and attacks, and they're all different and genuinely require their own set of expertise. The Lunchbox is meant for curious beginnners. We wanted to create an unintimidating, but robust codebase that could easily be tinkered with by people just learning python for hacking for the first time. We created the project with ease of use, simplicity, and robustneess in mind. With 5 distinct minimalistic GUI's, it's meant to facilitate the process of learning about the core of these attack-types.
 
